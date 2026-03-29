@@ -2,8 +2,7 @@
 const express = require("express");
 const config = require('./config.json');
 
-const DIGIKEY_CLIENT_ID = config.DIGIKEY_CLIENT_ID;
-const DIGIKEY_CLIENT_SECRET = config.DIGIKEY_CLIENT_SECRET;
+const { DIGIKEY_CLIENT_ID, DIGIKEY_CLIENT_SECRET } = config;
 const cors = require('cors');
 const axios = require('axios');
 const app = express();

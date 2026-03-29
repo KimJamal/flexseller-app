@@ -36,6 +36,8 @@
       --text-primary: var(--neutral-gray-140);
       --text-secondary: var(--neutral-gray-120);
       --border-primary: var(--neutral-gray-40);
+      --action-btn-bg: #ffffff;
+      --action-btn-bg-hover: #f4f7fd;
       --titlebar-height: 32px;
       --ribbon-height: 110px;
       --statusbar-height: 28px;
@@ -56,6 +58,8 @@
       --text-primary: #e8e8e8;
       --text-secondary: #cccccc;
       --border-primary: #3e3e3e;
+      --action-btn-bg: rgba(255, 255, 255, 0.06);
+      --action-btn-bg-hover: rgba(255, 255, 255, 0.10);
       --fluent-grey-10: #252526;
       --fluent-grey-20: #2d2d30;
       --fluent-grey-30: #3e3e42;
@@ -842,7 +846,7 @@
       flex: 1;
       padding: 10px 14px;
       border: 1px solid var(--border-primary);
-      background: var(--bg-secondary);
+      background: var(--action-btn-bg, var(--bg-secondary));
       color: var(--text-primary);
       font-size: 12px;
       font-weight: 600;
@@ -853,7 +857,24 @@
 
     .action-btn:hover {
       border-color: var(--fluent-accent);
-      color: var(--fluent-accent);
+      background: var(--action-btn-bg-hover, var(--bg-secondary));
+      color: var(--text-primary);
+    }
+
+    .action-btn:active {
+      transform: translateY(1px);
+    }
+
+    .action-btn.primary {
+      background: var(--fluent-accent);
+      border-color: var(--fluent-accent);
+      color: #ffffff;
+    }
+
+    .action-btn.primary:hover {
+      background: var(--fluent-accent-dark);
+      border-color: var(--fluent-accent-dark);
+      color: #ffffff;
     }
 
     .type-btn {
@@ -881,9 +902,6 @@
       border-left: 4px solid transparent !important;
     }
 
-    .action-btn.primary:hover {
-      background: var(--fluent-accent-dark);
-    }
 
     .cost-grid {
       display: grid;
@@ -1131,6 +1149,26 @@
       height: 8px;
       border-radius: 50%;
       background: var(--status-dot);
+    }
+
+    .network-offline-icon {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border-radius: 6px;
+      color: #e53935;
+    }
+
+    body.dark-mode .network-offline-icon {
+      color: #ff5a54;
+    }
+
+    .network-offline-icon svg {
+      width: 16px;
+      height: 16px;
     }
 
     .status-btn {
@@ -1999,6 +2037,40 @@
       color: var(--text-primary);
     }
 
+    .calc-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calc-icon-btn {
+      background: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .calc-icon-btn:hover {
+      background: rgba(0, 0, 0, 0.08);
+      color: var(--text-primary);
+    }
+
+    body.dark-mode .calc-icon-btn:hover {
+      background: rgba(255, 255, 255, 0.10);
+    }
+
+    .calc-icon-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
     .calc-close {
       background: none;
       border: none;
@@ -2532,6 +2604,14 @@
       display: none;
     }
 
+    .pis-history-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0 0 10px 2px;
+      opacity: 0.95;
+    }
+
     #pisHistoryList {
       display: flex;
       flex-wrap: wrap;
@@ -2556,11 +2636,14 @@
       background: var(--fluent-grey-30);
     }
 
-    .pis-history-chip:hover {
-      background: var(--neutral-gray-40);
-      cursor: pointer;
-      border-color: var(--fluent-accent);
-    }
+      .pis-history-chip:hover {
+        background: var(--neutral-gray-40);
+        cursor: pointer;
+        border-color: var(--fluent-orange);
+      }
+      .pis-history-chip:hover .pis-history-chip-text {
+        color: #2fd173;
+      }
 
     body.dark-mode .pis-history-chip:hover {
       background: var(--fluent-grey-70);
@@ -3476,6 +3559,7 @@
                     </button>
                     <!-- PIS Search History -->
                     <div id="pisHistoryContainer" data-show-all="false">
+                      <div class="pis-history-label">Search History</div>
                       <div id="pisHistoryList"></div>
                       <button id="pisHistoryShowMore" onclick="togglePisHistoryShowMore()"
                         style="margin-top: 8px;"></button>
@@ -3684,17 +3768,49 @@
       </div>
     </div>
     <div class="status-right">
+      <div id="networkOfflineIcon" class="status-item network-offline-icon" title="Offline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 8.5a16 16 0 0 1 20 0"></path>
+          <path d="M5 12a11 11 0 0 1 14 0"></path>
+          <path d="M8.5 15.5a6 6 0 0 1 7 0"></path>
+          <line x1="2" y1="2" x2="22" y2="22"></line>
+        </svg>
+      </div>
       <button class="status-btn" onclick="toggleTheme()" id="themeBtn">Light</button>
       <div class="status-item status-clickable" id="updateStatusContainer" style="display: flex; cursor: pointer;" onclick="checkForUpdatesManual()" title="Click to check for updates">
         <div class="status-indicator" id="updateIndicator" style="background: var(--fluent-accent);"></div>
         <span id="updateStatusText">Check for Updates</span>
       </div>
-      <span>&copy; <span id="copyrightYear">2026</span> FlexSeller v2.0.0</span>
+      <span>&copy; <span id="copyrightYear">2026</span> FlexSeller v2.0.1</span>
     </div>
   </footer>
 
   <!-- Toast -->
   <div id="toast" class="toast">Copied!</div>
+
+  <!-- What's New Modal -->
+  <div id="whatsNewOverlay" class="modal-overlay" onclick="closeWhatsNew(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">What's New in v2.0.1</div>
+        <button class="modal-close" onclick="closeWhatsNew()">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 14px 16px;">
+        <ul style="margin: 0; padding-left: 18px; color: var(--text-secondary); line-height: 1.6;">
+          <li><span style="color: var(--text-primary); font-weight: 600;">New:</span> Product Information Search (PIS)</li>
+          <li><span style="color: var(--text-primary); font-weight: 600;">New:</span> Search history chips</li>
+          <li><span style="color: var(--text-primary); font-weight: 600;">New:</span> Calculator result copy button</li>
+          <li><span style="color: var(--text-primary); font-weight: 600;">Improved:</span> Offline indicator in status bar</li>
+          <li><span style="color: var(--text-primary); font-weight: 600;">Fixed:</span> Exchange rate loads on startup</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn secondary" onclick="openWhatsNewInHelp()">View Details</button>
+        <button class="modal-btn primary" onclick="closeWhatsNew()">Close</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Exchange Rate Modal -->
   <div id="rateModalOverlay" class="modal-overlay" onclick="closeRateModal(event)">
@@ -3742,6 +3858,24 @@
       </button>
     </div>
     <div class="help-panel-body">
+      <div class="help-section" id="whatsNewSection">
+        <div class="help-section-title" onclick="toggleHelpSection(this)">
+          <span class="help-toggle-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="3">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg></span>
+          What's New (v2.0.1)
+        </div>
+        <div class="help-section-content">
+          <ul>
+            <li><strong>New:</strong> Product Information Search (PIS)</li>
+            <li><strong>New:</strong> Search history chips for faster repeat searches</li>
+            <li><strong>New:</strong> Calculator copy button to copy the current result</li>
+            <li><strong>Improved:</strong> Clear offline indicator in the status bar</li>
+            <li><strong>Fixed:</strong> Exchange rate now restores correctly on startup</li>
+          </ul>
+        </div>
+      </div>
       <div class="help-section active">
         <div class="help-section-title" onclick="toggleHelpSection(this)">
           <span class="help-toggle-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -3871,6 +4005,32 @@
               stroke="currentColor" stroke-width="3">
               <polyline points="9 18 15 12 9 6"></polyline>
             </svg></span>
+          Product Information Search (PIS)
+        </div>
+        <div class="help-section-content">
+          <p>PIS lets you search electronic components by part number and view product details like description, specs,
+            images, and datasheets.</p>
+          <h4>How to use:</h4>
+          <ul>
+            <li><strong>Open:</strong> Click the PIS tab in the ribbon or use <span class="kbd">Ctrl</span>+<span
+                class="kbd">4</span></li>
+            <li><strong>Search:</strong> Type a part number (e.g. LM358, ESP32-WROOM-32) and press Enter or click
+              Search</li>
+            <li><strong>History:</strong> Recent searches appear as chips you can click to re-run instantly</li>
+            <li><strong>Media:</strong> Click the product image to view it larger and use next/prev to browse media</li>
+          </ul>
+          <div class="help-tip">
+            <strong>Note:</strong> Search works automatically. No setup is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <div class="help-section-title" onclick="toggleHelpSection(this)">
+          <span class="help-toggle-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="3">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg></span>
           Built-in Calculator
         </div>
         <div class="help-section-content">
@@ -3910,6 +4070,10 @@
             <div class="shortcut-item">
               <span class="kbd">Ctrl</span>+<span class="kbd">3</span>
               <span class="shortcut-desc">Switch to Totals Calculator</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="kbd">Ctrl</span>+<span class="kbd">4</span>
+              <span class="shortcut-desc">Switch to PIS Search</span>
             </div>
             <div class="shortcut-item">
               <span class="kbd">Ctrl</span>+<span class="kbd">N</span>
@@ -3992,6 +4156,10 @@
               <span class="shortcut-desc">Totals tab</span>
             </div>
             <div class="shortcut-item">
+              <span class="kbd">Ctrl</span>+<span class="kbd">4</span>
+              <span class="shortcut-desc">PIS tab</span>
+            </div>
+            <div class="shortcut-item">
               <span class="kbd">Ctrl</span>+<span class="kbd">Shift</span>+<span class="kbd">C</span>
               <span class="shortcut-desc">Copy last result</span>
             </div>
@@ -3999,7 +4167,7 @@
               <span class="shortcut-desc"><strong>Home</strong> → New</span>
             </div>
             <div class="shortcut-item">
-              <span class="shortcut-desc"><strong>Home</strong> → Pricing / Reverse / Totals</span>
+              <span class="shortcut-desc"><strong>Home</strong> → Pricing / Reverse / Totals / PIS</span>
             </div>
             <div class="shortcut-item">
               <span class="shortcut-desc"><strong>Home</strong> → Reset / Clear all</span>
@@ -4015,6 +4183,9 @@
             </div>
             <div class="shortcut-item">
               <span class="shortcut-desc"><strong>Totals</strong> → New Invoice / Clear</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-desc"><strong>PIS</strong> → Search / Clear</span>
             </div>
             <div class="shortcut-item">
               <span class="shortcut-desc"><strong>View</strong> → Calculator / Theme / Help / Settings /
@@ -4038,6 +4209,9 @@
             </div>
             <div class="shortcut-item">
               <span class="shortcut-desc"><strong>Totals:</strong> quick invoice (VAT included)</span>
+            </div>
+            <div class="shortcut-item">
+              <span class="shortcut-desc"><strong>PIS:</strong> search parts and view specs</span>
             </div>
             <div class="shortcut-item">
               <span class="shortcut-desc"><strong>Calculator:</strong> built-in keypad</span>
@@ -4125,38 +4299,15 @@
         <div class="settings-hint">Shows the “Custom VAT %” field in the Pricing calculator.</div>
       </div>
 
-
-
       <div class="settings-section">
-        <div class="settings-section-title">FlexA (Digi-Key) API</div>
-        <div class="form-group" style="margin-bottom: 12px;">
-          <label
-            style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Client
-            ID</label>
-          <input type="text" id="digikeyClientId" class="settings-logo-input" placeholder="Enter Digi-Key Client ID"
-            style="margin-bottom: 0;" onkeydown="if (event.key === 'Enter') saveDigiKeyCredentials()">
-        </div>
-        <div class="form-group" style="margin-bottom: 12px;">
-          <label
-            style="font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Client
-            Secret</label>
-          <input type="password" id="digikeyClientSecret" class="settings-logo-input"
-            placeholder="Enter Digi-Key Client Secret" style="margin-bottom: 0;"
-            onkeydown="if (event.key === 'Enter') saveDigiKeyCredentials()">
-        </div>
-        <div class="settings-logo-actions">
-          <button class="settings-action-btn primary" type="button" onclick="saveDigiKeyCredentials()">Save
-            Keys</button>
+        <div class="settings-section-title">Search Connection</div>
+        <div class="settings-hint">Test that live search is available.</div>
+        <div class="settings-logo-actions" style="margin-top: 12px;">
           <button class="settings-action-btn secondary" type="button" onclick="testDigiKeyConnection()">Test
             Connection</button>
         </div>
-        <div class="settings-hint">Enter your credentials for Product Information Search. </div>
         <div id="digikeyStatus" style="margin-top: 10px; font-size: 11px; color: var(--text-secondary);"></div>
       </div>
-
-
-
-
 
       <!-- PIS Search History Section -->
       <div class="settings-section"
@@ -4206,7 +4357,16 @@
   <div id="calculatorPanel" class="calc-panel">
     <div class="calc-header">
       <div class="calc-title">Calculator</div>
-      <button class="calc-close" onclick="toggleCalculator()">&times;</button>
+      <div class="calc-header-actions">
+        <button class="calc-icon-btn" onclick="copyCalculatorResult()" title="Copy result">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+            stroke-linejoin="round" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <button class="calc-close" onclick="toggleCalculator()">&times;</button>
+      </div>
     </div>
     <div class="calc-display-wrapper">
       <div class="calc-history" id="calcHistory"></div>
@@ -4274,12 +4434,7 @@
 
     // API Configuration
     const DIGIKEY_BACKEND_URL = 'https://flexseller-api.b14-00010-20.workers.dev';
-    // FlexA (Digi-Key) Credentials
-    const digiKeyCredentials = {
-      clientId: 'Zo5QJfzybUW8LedUXvfLMry8kOwVGpEGbckYCtseRtBjlUSG',
-      clientSecret: '6dsJaq16PACBeQGcmDi2Ukc61uJsyUwAsefYlqknyumkAQ5aEUwWTc7pEelTFkXW'
-    };
-    let digiKeyConnected = true; // Auto-connect with pre-filled keys
+    let digiKeyConnected = true;
 
     // Search Provider Selection
     let currentSearchProvider = 'digikey';
@@ -4298,10 +4453,13 @@
 
     // Digi-Key Functions
     function saveDigiKeyCredentials() {
-      showToast('Credentials are hardcoded for testing');
+      showToast('No setup required.');
     }
 
     function loadDigiKeyCredentials() {
+      const statusEl = document.getElementById('digikeyStatus');
+      if (statusEl) statusEl.innerHTML = '<span style="color: var(--text-secondary);">Ready</span>';
+      return;
       // Pre-fill the inputs so user can see what's being used
       document.getElementById('digikeyClientId').value = digiKeyCredentials.clientId;
       document.getElementById('digikeyClientSecret').value = '••••••••••••••••••••••••••••••••';
@@ -4310,12 +4468,37 @@
 
     async function testDigiKeyConnection() {
       const statusEl = document.getElementById('digikeyStatus');
+      if (statusEl) statusEl.innerHTML = '<span style="color: var(--fluent-accent);">Checking connection...</span>';
+
+      try {
+        // Cloudflare API handles credentials server-side.
+        const healthResponse = await fetch(`${DIGIKEY_BACKEND_URL}/api/health`, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (healthResponse.ok) {
+          if (statusEl) statusEl.innerHTML = '<span style="color: var(--toast-success); font-weight: 600;">&#10003; FlexA Connected</span>';
+          showToast('FlexA Connected');
+          digiKeyConnected = true;
+          if (typeof updateSearchButtonState === 'function') updateSearchButtonState();
+        } else {
+          if (statusEl) statusEl.innerHTML = `<span style="color: var(--fluent-orange);">&#9888; Connection check failed: ${healthResponse.status}</span>`;
+          digiKeyConnected = false;
+          if (typeof updateSearchButtonState === 'function') updateSearchButtonState();
+        }
+      } catch (err) {
+        console.error('Connection error:', err);
+        if (statusEl) statusEl.innerHTML = `<span style="color: var(--fluent-orange);">&#9888; Unable to connect. Check your internet connection.</span>`;
+        digiKeyConnected = false;
+        if (typeof updateSearchButtonState === 'function') updateSearchButtonState();
+      }
+
+      return;
 
       // 1. Get the actual values from your Settings UI inputs
       const clientId = document.getElementById('digikeyClientId').value.trim();
-      let clientSecret = document.getElementById('digikeyClientSecret').value.trim();
 
-      // Handle masked secret
       if (clientSecret.includes('•')) {
         clientSecret = digiKeyCredentials.clientSecret;
       }
@@ -4643,7 +4826,7 @@
           throw new Error('No results found');
         }
       } catch (err) {
-        console.warn('API Search failed:', err);
+        console.warn('Search failed:', err);
         // If fetch failed due to network and we're offline, show offline state
         if (!navigator.onLine) {
           const statusEl = document.getElementById('pisStatus');
@@ -4659,7 +4842,7 @@
         const msg = (err && err.message) ? String(err.message).toLowerCase() : '';
         if (msg.includes('timed out') || msg.includes('request timed out') || msg.includes('abort')) {
           document.getElementById('pisLoading').style.display = 'none';
-          showToast('No response from API (timed out)', true);
+          showToast('Search timed out', true);
           renderPisNoResult(sku);
           return;
         }
@@ -4682,16 +4865,10 @@
     async function searchDigiKeyApi(sku, timeoutMs = 15000) {
       const url = `${DIGIKEY_BACKEND_URL}/api/digikey/search?sku=${encodeURIComponent(sku)}`;
 
-      let clientId = document.getElementById('digikeyClientId').value.trim();
-      let clientSecret = document.getElementById('digikeyClientSecret').value.trim();
+      // FlexA keys are managed in the cloud (no local key entry).
+      // No local API secret required (handled by Cloudflare).
 
-      // Handle masked secret
-      if (clientSecret.includes('•') || !clientSecret) {
-        clientSecret = digiKeyCredentials.clientSecret;
-      }
-      if (!clientId) {
-        clientId = digiKeyCredentials.clientId;
-      }
+      // (credentials handled by Cloudflare)
 
       const controller = new AbortController();
       const signal = controller.signal;
@@ -4701,8 +4878,6 @@
         const response = await fetch(url, {
           method: 'GET',
           headers: {
-            'X-DigiKey-Client-Id': clientId,
-            'X-DigiKey-Client-Secret': clientSecret,
             'Accept': 'application/json'
           },
           signal
@@ -4712,7 +4887,7 @@
 
         if (!response.ok) {
           const errText = await response.text();
-          throw new Error(`API Error: ${response.status} - ${errText}`);
+          throw new Error(`Search error: ${response.status} - ${errText}`);
         }
 
         return await response.json();
@@ -4955,7 +5130,7 @@
         noPanel.innerHTML = '<img id="pisNoResultImage" src="assets/NoResultFound.png" alt="No results" style="max-width:220px;max-height:220px;opacity:0.95;margin-bottom:20px;">' +
           '<div style="font-size:18px;font-weight:700;margin-bottom:12px;color:var(--text-primary);">No Data Found</div>' +
           '<div style="font-size:14px;color:var(--text-secondary);line-height:1.6;max-width:560px;text-align:center;margin-bottom:24px;">' +
-          'All API searches for "<strong>' + sku + '</strong>" returned no results.<br><br>' +
+          'No results for "<strong>' + sku + '</strong>".<br><br>' +
           '<span style="font-weight:600;">Suggestions:</span><br>' +
           '• Verify the part number is correct<br>' +
           '• Check for typos or extra characters<br>' +
@@ -4966,7 +5141,7 @@
       } else {
         noPanel.style.display = 'flex';
         noPanel.querySelector('div:nth-child(3)').innerHTML =
-          'All API searches for "<strong>' + sku + '</strong>" returned no results.<br><br>' +
+          'No results for "<strong>' + sku + '</strong>".<br><br>' +
           '<span style="font-weight:600;">Suggestions:</span><br>' +
           '• Verify the part number is correct<br>' +
           '• Check for typos or extra characters<br>' +
@@ -5021,6 +5196,8 @@
       const input = document.getElementById('pisSearchInput');
       const btn = document.getElementById('pisSearchBtn');
       const statusEl = document.getElementById('pisStatus');
+      const offlineIcon = document.getElementById('networkOfflineIcon');
+      if (offlineIcon) offlineIcon.style.display = online ? 'none' : 'flex';
       if (!online) {
         if (input) { input.disabled = true; input.placeholder = 'You are Offline...'; input.style.borderColor = '#e53935'; input.style.color = '#e53935'; }
         if (btn) { btn.disabled = true; btn.style.opacity = '0.6'; }
@@ -5057,24 +5234,63 @@
         btn.disabled = false; // Allow clicking to open settings
         btn.style.opacity = '1';
         btn.onclick = () => openApiSettings();
-        if (btnText) btnText.textContent = 'Connect API';
-        else btn.textContent = 'Connect API';
+        if (btnText) btnText.textContent = 'Check Connection';
+        else btn.textContent = 'Check Connection';
       }
     }
 
-    // Open Settings panel and scroll to API inputs
+    // Open Settings panel and scroll to connection section
     function openApiSettings() {
       // ensure settings panel opened (open if not already active)
       const panel = document.getElementById('settingsPanel');
       if (panel && !panel.classList.contains('active')) toggleSettingsPanel();
       else if (!panel) toggleSettingsPanel();
       setTimeout(() => {
-        const el = document.getElementById('digikeyClientId');
+        const el = document.getElementById('digikeyStatus');
         if (el) {
           el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          el.focus();
         }
       }, 300);
+    }
+
+    const APP_VERSION = '2.0.1';
+
+    function openWhatsNew() {
+      const overlay = document.getElementById('whatsNewOverlay');
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function closeWhatsNew(evt) {
+      try {
+        if (evt && evt.target && evt.target.closest && evt.target.closest('.modal')) return;
+      } catch (e) { }
+      const overlay = document.getElementById('whatsNewOverlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    function openWhatsNewInHelp() {
+      closeWhatsNew();
+      const panel = document.getElementById('helpPanel');
+      if (panel && !panel.classList.contains('active')) toggleHelpPanel();
+      setTimeout(() => {
+        try {
+          const section = document.getElementById('whatsNewSection');
+          if (!section) return;
+          document.querySelectorAll('.help-section').forEach(s => s.classList.remove('active'));
+          section.classList.add('active');
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } catch (e) { }
+      }, 120);
+    }
+
+    function showWhatsNewIfNeeded() {
+      try {
+        const key = 'flexseller_last_seen_version';
+        const last = localStorage.getItem(key) || '';
+        if (last === APP_VERSION) return;
+        localStorage.setItem(key, APP_VERSION);
+        if (APP_VERSION === '2.0.1') openWhatsNew();
+      } catch (e) { }
     }
 
     // Initialize search button state on load
@@ -5084,6 +5300,7 @@
       syncSettingsPanel();
       renderPisHistory();
       setTimeout(updateSearchButtonState, 350);
+      setTimeout(showWhatsNewIfNeeded, 450);
     });
 
     // function syncSettingsPanel() {
@@ -6291,6 +6508,30 @@
         overlay.classList.add('active');
         panel.classList.add('active');
         document.getElementById('calcDisplay').textContent = calcDisplay;
+      }
+    }
+
+    async function copyCalculatorResult() {
+      const text = String(calcDisplay ?? '').trim();
+      if (!text) return;
+
+      try {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', 'true');
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          ta.remove();
+        }
+        showToast('Copied calculator result');
+      } catch (e) {
+        showToast('Copy failed', true);
       }
     }
 
